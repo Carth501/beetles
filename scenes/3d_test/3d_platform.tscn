@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=3 uid="uid://b7ox3jfyrluc"]
+
+[ext_resource type="Material" uid="uid://bwwft88d5n11g" path="res://materials/rock_surface.tres" id="1_30m2t"]
+[ext_resource type="Script" path="res://scripts/3d_test/PlatformPassthrough.gd" id="2_xln51"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5u0an"]
+size = Vector3(3, 0.1, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kthrd"]
+material = ExtResource("1_30m2t")
+size = Vector3(3, 0.1, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dqhr7"]
+size = Vector3(3, 0.1, 2)
+
+[node name="Platform" type="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.87825, 2.87774, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_5u0an")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_kthrd")
+
+[node name="PlatformPassthrough" type="Area3D" parent="."]
+script = ExtResource("2_xln51")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformPassthrough"]
+shape = SubResource("BoxShape3D_dqhr7")
+
+[connection signal="body_entered" from="PlatformPassthrough" to="PlatformPassthrough" method="_on_body_entered"]
+[connection signal="body_exited" from="PlatformPassthrough" to="PlatformPassthrough" method="_on_body_exited"]

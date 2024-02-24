@@ -1,0 +1,109 @@
+[gd_scene load_steps=13 format=3 uid="uid://liaddyfvm46a"]
+
+[ext_resource type="Material" uid="uid://bwwft88d5n11g" path="res://materials/rock_surface.tres" id="1_ggwhb"]
+[ext_resource type="PackedScene" uid="uid://b7ox3jfyrluc" path="res://scenes/3d_test/3d_platform.tscn" id="2_6wif0"]
+[ext_resource type="Script" path="res://scripts/3d_test/Actor.gd" id="3_7h36a"]
+[ext_resource type="Texture2D" uid="uid://cklvohc4xxocn" path="res://icon.svg" id="4_06owy"]
+[ext_resource type="Shader" path="res://shaders/sky_shader.gdshader" id="5_5p2rq"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_bvk0v"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_136ji"]
+material = ExtResource("1_ggwhb")
+size = Vector2(20, 20)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tubwq"]
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_1xmgj"]
+frame_0/texture = ExtResource("4_06owy")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fluxt"]
+shader = ExtResource("5_5p2rq")
+shader_parameter/offset_horizon = 0.236
+shader_parameter/horizon_intensity = -0.443
+shader_parameter/sun_set = Color(0.56, 0.24, 0, 1)
+shader_parameter/horizon_color_day = Color(0.57, 0.53, 0.26, 1)
+shader_parameter/horizon_color_night = Color(0.09, 0.16, 0.04, 1)
+shader_parameter/sun_color = Color(1, 1, 1, 1)
+shader_parameter/sun_radius = 0.2
+shader_parameter/flat_sun = true
+shader_parameter/moon_color = Color(1, 1, 1, 1)
+shader_parameter/moon_radius = 0.05
+shader_parameter/moon_crescent = -0.024
+shader_parameter/dark_falloff = 3.915
+shader_parameter/enable_horizon_fade = true
+shader_parameter/horizon_fade_size = 0.2
+shader_parameter/horizon_fade_blend = 0.1
+shader_parameter/day_bottom_color = Color(0.4, 1, 1, 1)
+shader_parameter/day_top_color = Color(0, 0.8, 1, 1)
+shader_parameter/night_bottom_color = Color(0, 0, 0.2, 1)
+shader_parameter/night_top_color = Color(0, 0, 0, 1)
+shader_parameter/stars_speed = 0.2
+shader_parameter/stars_cutoff = 0.702
+shader_parameter/stars_sky_color = Color(0, 0.11, 0.05, 1)
+shader_parameter/offset_stars = 0.083
+shader_parameter/stars_intensity = -2.829
+shader_parameter/star_falloff = 1.79
+shader_parameter/stars_fade_modulation = 0.91
+shader_parameter/cloud_edge_day_color = Color(0.9, 0.9, 0.9, 1)
+shader_parameter/cloud_main_day_color = Color(1, 1, 1, 1)
+shader_parameter/cloud_edge_night_color = Color(0.15, 0.19, 0.25, 1)
+shader_parameter/cloud_main_night_color = Color(0.15, 0.16, 0.2, 1)
+shader_parameter/cloud_speed_1 = 0.01
+shader_parameter/cloud_speed_2 = 0.02
+shader_parameter/cloud_speed_3 = 0.02
+shader_parameter/cloud_scale_1 = 0.425
+shader_parameter/cloud_scale_2 = 0.074
+shader_parameter/cloud_scale_3 = 0.075
+shader_parameter/cloud_distortion = 1.95
+shader_parameter/cloud_strength = 1.0
+shader_parameter/cloud_cutoff = 0.013
+shader_parameter/cloud_fuzziness = 0.261
+
+[sub_resource type="Sky" id="Sky_s4u51"]
+sky_material = SubResource("ShaderMaterial_fluxt")
+
+[sub_resource type="Environment" id="Environment_5ihn4"]
+background_mode = 2
+sky = SubResource("Sky_s4u51")
+
+[node name="TestRealm" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_bvk0v")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("PlaneMesh_136ji")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="Platform" parent="." instance=ExtResource("2_6wif0")]
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.21007, 1, 0)
+collision_mask = 3
+script = ExtResource("3_7h36a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("CapsuleShape3D_tubwq")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 17.9281)
+current = true
+fov = 40.0
+
+[node name="Sprite3D" type="Sprite3D" parent="Player"]
+texture = SubResource("AnimatedTexture_1xmgj")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.887148, 0.451667, -0.0946846, -0.311041, -0.433649, 0.845696, 0.340913, 0.779709, 0.525198, 0, 3.38165, -0.0211973)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5ihn4")
+
+[node name="Platform2" parent="." instance=ExtResource("2_6wif0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.104031, 4.30017, 0)
+
+[node name="Platform3" parent="." instance=ExtResource("2_6wif0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.22576, 6.03066, 0)

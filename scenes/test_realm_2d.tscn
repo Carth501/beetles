@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=3 uid="uid://cuut0kcje67m1"]
+
+[ext_resource type="Texture2D" uid="uid://ch32j82clvie2" path="res://textures/rock_surface/rock_surface_diff_4k.png" id="2_05cxa"]
+[ext_resource type="Texture2D" uid="uid://cklvohc4xxocn" path="res://icon.svg" id="3_1xgi4"]
+[ext_resource type="Script" path="res://scripts/Actor.gd" id="3_56pnb"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_b40kc"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_o5r3j"]
+size = Vector2(200, 200)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5375l"]
+radius = 31.0161
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y6ppm"]
+size = Vector2(198, 9)
+
+[sub_resource type="QuadMesh" id="QuadMesh_s7cdx"]
+size = Vector2(200, 10)
+
+[node name="TestRealm2d" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(656, 523)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_b40kc")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="StaticBody2D"]
+position = Vector2(-1.52588e-05, 101)
+scale = Vector2(1.276, 1)
+mesh = SubResource("QuadMesh_o5r3j")
+texture = ExtResource("2_05cxa")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(681, 329)
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("3_56pnb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CircleShape2D_5375l")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_1xgi4")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="Platform" type="StaticBody2D" parent="."]
+position = Vector2(310, 433)
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_y6ppm")
+one_way_collision = true
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Platform"]
+mesh = SubResource("QuadMesh_s7cdx")
+texture = ExtResource("2_05cxa")
