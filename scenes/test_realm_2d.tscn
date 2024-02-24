@@ -1,8 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://cuut0kcje67m1"]
+[gd_scene load_steps=12 format=3 uid="uid://cuut0kcje67m1"]
 
 [ext_resource type="Texture2D" uid="uid://ch32j82clvie2" path="res://textures/rock_surface/rock_surface_diff_4k.png" id="2_05cxa"]
 [ext_resource type="Texture2D" uid="uid://cklvohc4xxocn" path="res://icon.svg" id="3_1xgi4"]
 [ext_resource type="Script" path="res://scripts/Actor.gd" id="3_56pnb"]
+[ext_resource type="PackedScene" uid="uid://brxh684pl5ost" path="res://scenes/platform.tscn" id="4_d2gag"]
+[ext_resource type="Texture2D" uid="uid://cc0ixyvbe838q" path="res://sprites/Tiger_Beetle_Bot.png" id="5_1wekk"]
+[ext_resource type="Script" path="res://scripts/Npc.gd" id="5_swx0a"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_b40kc"]
 
@@ -12,11 +15,15 @@ size = Vector2(200, 200)
 [sub_resource type="CircleShape2D" id="CircleShape2D_5375l"]
 radius = 31.0161
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_y6ppm"]
-size = Vector2(198, 9)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cdvsx"]
+size = Vector2(80, 32)
 
-[sub_resource type="QuadMesh" id="QuadMesh_s7cdx"]
-size = Vector2(200, 10)
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_vuw0c"]
+vertices = PackedVector2Array(120, -54, 459, -31, 392, 172, 0, 275, -271, 35, -274, 524, 3, 293, 273, 539, 376, 269, 924, 520, 583, 194, 820, 211, 982, 421)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4), PackedInt32Array(5, 4, 3, 6), PackedInt32Array(7, 5, 6, 8, 9), PackedInt32Array(9, 8, 10, 11, 12)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(119, -65, 473, -41, 401, 181, 11, 282, 374, 259, 583, 184, 826, 202, 995, 421, 931, 530, 273, 549, -285, 534, -281, 27)])
+parsed_geometry_type = 1
+source_geometry_group_name = &"navigation_polygon_source_group"
 
 [node name="TestRealm2d" type="Node2D"]
 
@@ -47,16 +54,23 @@ texture = ExtResource("3_1xgi4")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 
-[node name="Platform" type="StaticBody2D" parent="."]
-position = Vector2(310, 433)
-collision_layer = 2
-collision_mask = 2
+[node name="Platform" parent="." instance=ExtResource("4_d2gag")]
+position = Vector2(414, 421)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
-position = Vector2(0, 0.5)
-shape = SubResource("RectangleShape2D_y6ppm")
-one_way_collision = true
+[node name="Npc" type="CharacterBody2D" parent="."]
+position = Vector2(800, 344)
+script = ExtResource("5_swx0a")
+movement_target_position = Vector2(0, 0)
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="Platform"]
-mesh = SubResource("QuadMesh_s7cdx")
-texture = ExtResource("2_05cxa")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Npc"]
+shape = SubResource("RectangleShape2D_cdvsx")
+
+[node name="Sprite2D" type="Sprite2D" parent="Npc"]
+position = Vector2(0, -10)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("5_1wekk")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Npc"]
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_vuw0c")
